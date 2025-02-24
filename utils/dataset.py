@@ -19,3 +19,4 @@ def get_data():
                                          transform=transform)
     
     test_loader = DataLoader(test_set, batch_size=64, shuffle=False, num_workers=4)
+    return (training_set, test_set, training_loader, test_loader)
