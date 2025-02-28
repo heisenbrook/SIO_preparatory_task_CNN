@@ -43,22 +43,36 @@ def get_data():
 
 
 
-def load_model_transfer_l(classes, device):
+def model_training(data_path, class_names):
     """
-    Loads the model from ultralytics and saves it as a torchscript file, freezes the parameters and add a new head
-    for the classification task of the new dataset and returns the new model for training
+    Loads the model from ultralytics, freezes the parameters and add a new head
+    for the classification task of the new dataset and returns training results
     """
-    model = YOLO('yolo11n-cls.yaml').load('yolo11n-cls.pt')
 
-    model.export(format='torchscript', device=device)
+    if torch.cuda.is_available():
+        print('GPU available!')
+    else:
+        print('GPU not available!')
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    
+    model = YOLO('yolo11n-cls.pt')
+    model.to(device)
 
-    for param in model.parameters():
-        param.requires_grad = False
+    model.train(
+        data=data_path,
+        epochs=10,
+        batch=32,
+        imgsz=28,
+        workers=4,
+        device=device,
+        project='training_results',
+        exist_ok=True,
+        pretrained=True,
+        optimizer='Adam',
+        classes=class_names,
+        freeze=9
+    )
 
-    in_feat = model.linear.in_features
-
-    model.linear = nn.Linear(in_feat, classes)
-    return model
 
 
 
