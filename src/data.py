@@ -72,33 +72,6 @@ def get_data_yaml():
     create_dir(val_data, val_set, val_dir)
 
 
-    # for idx, (image, label) in enumerate(training_set):
-    #     image = image.numpy()
-    #     image = Image.fromarray((image[0] * 255).astype(np.uint8))
-    #     subdir = train_dir / lbl_to_class(label)
-    #     subdir.mkdir(exist_ok=True)
-    #     path = str(subdir / f'{idx}.png')
-    #     image.save(path, format='png')
-    #     train_data.append({'image_path': path, 'label': lbl_to_class(label)})
-
-    # for idx, (image, label) in enumerate(test_set):
-    #     image = image.numpy()
-    #     image = Image.fromarray((image[0] * 255).astype(np.uint8))
-    #     subdir = test_dir / lbl_to_class(label)
-    #     subdir.mkdir(exist_ok=True)
-    #     path = str(subdir / f'{idx}.png')
-    #     image.save(path, format='png')
-    #     test_data.append({'image_path': path, 'label': lbl_to_class(label)})
-    
-    # for idx, (image, label) in enumerate(val_set):
-    #     image = image.numpy()
-    #     image = Image.fromarray((image[0] * 255).astype(np.uint8))
-    #     subdir = val_dir / lbl_to_class(label)
-    #     subdir.mkdir(exist_ok=True)
-    #     path = str(subdir / f'{idx}.png')
-    #     image.save(path, format='png')
-    #     val_data.append({'image_path': path, 'label': lbl_to_class(label)})
-
     with open(output_dir / yaml_filename, 'w') as file:
         yaml.dump({
             'train': train_data,

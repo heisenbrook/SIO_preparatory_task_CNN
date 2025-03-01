@@ -1,7 +1,6 @@
 from src.data import get_data_yaml
 from src.utils import model_training_transfer, model_training
-from ultralytics import YOLO
-from pathlib import Path
+
 
 class_names = []
 
