@@ -1,15 +1,21 @@
-import os
 import numpy as np
 import yaml
-import torch.nn as nn
+from torch.utils.data import random_split
 from PIL import Image
 from torchvision import datasets, transforms
 from pathlib import Path
 
-def get_data_yaml(output_dir, yaml_filename):
-    """
-    Creates and returns the .yaml file used for training YOLOv11 model.
-    """
+def lbl_to_class(label):
+    names = ['T-shirt or top', 'Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+    lbl_dict = {}
+
+    for idx, name in enumerate(names):
+        lbl_dict[idx] = name
+    
+    return lbl_dict[label]
+
+
+def train_test_val(output_dir):
     transform = transforms.ToTensor()
     
     training_set = datasets.FashionMNIST(root = output_dir, 
@@ -21,50 +27,91 @@ def get_data_yaml(output_dir, yaml_filename):
                                      train= False, 
                                      download= True, 
                                      transform=transform)
+    
+    training_set, val_set = random_split(training_set, [0.8, 0.2])
+
+    return training_set, test_set, val_set
+
+
+def create_dir(data, set, dir):
+
+    for idx, (image, label) in enumerate(set):
+        image = image.numpy()
+        image = Image.fromarray((image[0] * 255).astype(np.uint8))
+        subdir = dir / lbl_to_class(label)
+        subdir.mkdir(exist_ok=True)
+        path = str(subdir / f'{idx}.png')
+        image.save(path, format='png')
+        data.append({'image_path': path, 'label': lbl_to_class(label)})       
+
+
+def get_data_yaml():
+    """
+    Creates and returns the .yaml file used for training YOLOv11 model.
+    """
+
+    output_dir = Path('data/')
+    yaml_filename = 'fashionmnist_classification.yaml'
+
+    training_set, test_set, val_set = train_test_val(output_dir)
+
     train_dir = output_dir / 'train'
     test_dir = output_dir / 'test'
+    val_dir = output_dir / 'val'
     train_dir.mkdir(exist_ok=True)
     test_dir.mkdir(exist_ok=True)
+    val_dir.mkdir(exist_ok=True)
     
 
     train_data = []
     test_data = []
+    val_data = []
+
+    create_dir(train_data, training_set, train_dir)
+    create_dir(test_data, test_set, test_dir)
+    create_dir(val_data, val_set, val_dir)
 
 
-    for idx, (image, label) in enumerate(training_set):
-        image = image.numpy()
-        image = Image.fromarray((image[0] * 255).astype(np.uint8))
-        subdir = train_dir / str(label)
-        subdir.mkdir(exist_ok=True)
-        path = str(subdir / f'{idx}.png')
-        image.save(path, format='png')
-        train_data.append({'image_path': path, 'label': int(label)})
+    # for idx, (image, label) in enumerate(training_set):
+    #     image = image.numpy()
+    #     image = Image.fromarray((image[0] * 255).astype(np.uint8))
+    #     subdir = train_dir / lbl_to_class(label)
+    #     subdir.mkdir(exist_ok=True)
+    #     path = str(subdir / f'{idx}.png')
+    #     image.save(path, format='png')
+    #     train_data.append({'image_path': path, 'label': lbl_to_class(label)})
 
-    for idx, (image, label) in enumerate(test_set):
-        image = image.numpy()
-        image = Image.fromarray((image[0] * 255).astype(np.uint8))
-        subdir = test_dir / str(label)
-        subdir.mkdir(exist_ok=True)
-        path = str(subdir / f'{idx}.png')
-        image.save(path, format='png')
-        test_data.append({'image_path': path, 'label': int(label)})
+    # for idx, (image, label) in enumerate(test_set):
+    #     image = image.numpy()
+    #     image = Image.fromarray((image[0] * 255).astype(np.uint8))
+    #     subdir = test_dir / lbl_to_class(label)
+    #     subdir.mkdir(exist_ok=True)
+    #     path = str(subdir / f'{idx}.png')
+    #     image.save(path, format='png')
+    #     test_data.append({'image_path': path, 'label': lbl_to_class(label)})
+    
+    # for idx, (image, label) in enumerate(val_set):
+    #     image = image.numpy()
+    #     image = Image.fromarray((image[0] * 255).astype(np.uint8))
+    #     subdir = val_dir / lbl_to_class(label)
+    #     subdir.mkdir(exist_ok=True)
+    #     path = str(subdir / f'{idx}.png')
+    #     image.save(path, format='png')
+    #     val_data.append({'image_path': path, 'label': lbl_to_class(label)})
 
     with open(output_dir / yaml_filename, 'w') as file:
         yaml.dump({
             'train': train_data,
             'test': test_data,
+            'val': val_data,
             'nc': 10,
-            'names': ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+            'names': ['T-shirt or top', 'Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
          }, file)
-    
     
 
     with open(output_dir / yaml_filename, 'r') as file:
         data = yaml.safe_load(file)
 
-    # import pdb
-    # pdb.set_trace()
-    # x=yaml.safe_load(open(str(f), 'r'))
     class_names = data['names']
     
     return str(output_dir), class_names
