@@ -1,13 +1,8 @@
 import torch
-import torch.nn as nn
-from torch.utils.data import DataLoader
-from torchvision import datasets, transforms
 from ultralytics import YOLO
-from tqdm import tqdm
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 
-def model_training_transfer(data_path, class_names):
+def model_training_transfer(data_path, class_names, att_epoch):
     """
     Loads the model from ultralytics, freezes the parameters and add a new head
     for the classification task of the new dataset and returns training results
@@ -25,12 +20,12 @@ def model_training_transfer(data_path, class_names):
     model.train(
         data=data_path,
         epochs=100,
-        patience=10,
+        patience=att_epoch,
         batch=64,
         device=device,
         workers=4,
         project='training_results',
-        name='transfer_learning_run',
+        name=f'tl_run_{att_epoch}_epoch_attention',
         exist_ok=True,
         pretrained=True,
         optimizer='Adam',
@@ -40,7 +35,7 @@ def model_training_transfer(data_path, class_names):
         plots=True
     )
 
-def model_training(data_path):
+def model_training(data_path, class_names, att_epoch):
     """
     Loads the model from ultralytics, freezes the parameters and add a new head
     for the classification task of the new dataset and returns training results
@@ -58,80 +53,20 @@ def model_training(data_path):
     model.train(
         data=data_path,
         epochs=100,
-        patience=10,
+        patience=att_epoch,
         batch=64,
         device=device,
         workers=4,
         project='training_results',
-        name='normal_run',
+        name=f'normal_run_{att_epoch}_epoch_attention',
         exist_ok=True,
         pretrained=False,
         optimizer='Adam',
+        classes=class_names,
         val=True,
         plots=True
     )
 
-
-
-def training(model, n_epochs, training_loader, optimizer, loss_fn, device):
-    """
-    Training function for the imported and modified model for transfer learning
-    :return: total_loss, total_accuracy, total_prec
-    """
-    
-    total_train_loss, total_accuracy, total_prec = [], [], []
-
-    for epoch in range(n_epochs):
-        model.train()
-        train_loss = 0.0
-
-        for imag, lbl in tqdm(enumerate(training_loader),
-                              desc="Batch",
-                              total=len(training_loader),
-                              leave=False,
-                              ncols=80,
-                              ):
-            imag, lbl = imag.to(device), lbl.to(device)
-
-            optimizer.zero_grad()
-            out = model(imag)
-            loss = loss_fn(out, lbl)
-            loss.backward()
-            optimizer.step()
-            pred = torch.argmax(out, dim=1)
-            train_loss += loss.item()
-            epoch_loss = train_loss/len(training_loader)
-            accuracy = accuracy_score(lbl, pred)
-            prec = precision_score(lbl, pred, average='macro')
-        print(f'Epoch {epoch + 1} | training accuracy:{accuracy:.2f}% | precision:{prec:.5f}% | training loss:{epoch_loss:.5f}% ')
-        total_train_loss.append(epoch_loss)
-        total_accuracy.append(accuracy)
-        total_prec.append(prec)
-    return total_train_loss, total_accuracy, total_prec
-
-def testing(model, test_loader, loss_fn):
-    """
-    Testing function for the imported and modified model for transfer learning
-    """
-    model.eval()
-    test_loss = 0.0
-
-    for imag, lbl in tqdm(enumerate(test_loader),
-                          desc="Batch",
-                          total=len(test_loader),
-                          leave=False,
-                          ncols=80,
-                          ):
-
-        out = model(imag)
-        loss = loss_fn(out, lbl)
-            
-        pred = torch.argmax(out, dim=1)
-        test_loss += loss.item()
-        accuracy = accuracy_score(lbl, pred)
-        prec = precision_score(lbl, pred, average='macro')
-        eval_loss = test_loss/len(test_loader)
-    print(f'test accuracy:{accuracy:.2f}% | precision:{prec:.5f}% | training loss:{eval_loss:.5f}% ')
 
 
     

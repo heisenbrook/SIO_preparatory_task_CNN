@@ -6,6 +6,9 @@ from torchvision import datasets, transforms
 from pathlib import Path
 
 def lbl_to_class(label):
+    """
+    Returns the string associated from the numeric label
+    """
     names = ['T-shirt or top', 'Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
     lbl_dict = {}
 
@@ -16,6 +19,9 @@ def lbl_to_class(label):
 
 
 def train_test_val(output_dir):
+    """
+    Download and trasform the datasets to re-organize as .yaml file
+    """
     transform = transforms.ToTensor()
     
     training_set = datasets.FashionMNIST(root = output_dir, 
@@ -34,7 +40,10 @@ def train_test_val(output_dir):
 
 
 def create_dir(data, set, dir):
-
+    """
+    Creates and returns the structured directories for the correct implementation
+    of .yaml file
+    """
     for idx, (image, label) in enumerate(set):
         image = image.numpy()
         image = Image.fromarray((image[0] * 255).astype(np.uint8))

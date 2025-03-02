@@ -4,3 +4,4 @@ data/test
 data/train
 data/val
 data/FashionMNIST
+utils_pytorch.py
