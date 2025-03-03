@@ -109,19 +109,19 @@ The plots and matrices below show the trend for the loss for both training and v
 
 ##### 10 epochs patience:
 ###### plots
-<img src= 'https://github.com/heisenbrook/SIO_preparatory_task_CNN/blob/main/training_results/normal_run_10_epoch_attention/results.png' width="300" height="300" />   <img src= 'https://github.com/heisenbrook/SIO_preparatory_task_CNN/blob/main/training_results/tl_run_10_epoch_attention/results.png' width="300" 
+<img src= 'https://github.com/heisenbrook/SIO_preparatory_task_CNN/blob/main/training_results/normal_run_10_epoch_patience/results.png' width="300" height="300" />   <img src= 'https://github.com/heisenbrook/SIO_preparatory_task_CNN/blob/main/training_results/tl_run_10_epoch_patience/results.png' width="300" 
 height="300" />  
 
 ###### confusion matrix
-<img src= 'https://github.com/heisenbrook/SIO_preparatory_task_CNN/blob/main/training_results/normal_run_10_epoch_attention/confusion_matrix_normalized.png' width="300" height="300" />   <img src= 'https://github.com/heisenbrook/SIO_preparatory_task_CNN/blob/main/training_results/tl_run_10_epoch_attention/confusion_matrix_normalized.png' width="300" 
+<img src= 'https://github.com/heisenbrook/SIO_preparatory_task_CNN/blob/main/training_results/normal_run_10_epoch_patience/confusion_matrix_normalized.png' width="300" height="300" />   <img src= 'https://github.com/heisenbrook/SIO_preparatory_task_CNN/blob/main/training_results/tl_run_10_epoch_patience/confusion_matrix_normalized.png' width="300" 
 height="300" />  
 
 ##### 15 epochs patience:
 ###### plots
-<img src= 'https://github.com/heisenbrook/SIO_preparatory_task_CNN/blob/main/training_results/normal_run_15_epoch_attention/results.png' width="300" height="300" />    <img src= 'https://github.com/heisenbrook/SIO_preparatory_task_CNN/blob/main/training_results/tl_run_15_epoch_attention/results.png' width="300" height="300" />
+<img src= 'https://github.com/heisenbrook/SIO_preparatory_task_CNN/blob/main/training_results/normal_run_15_epoch_patience/results.png' width="300" height="300" />    <img src= 'https://github.com/heisenbrook/SIO_preparatory_task_CNN/blob/main/training_results/tl_run_15_epoch_patience/results.png' width="300" height="300" />
 
 ###### confusion matrix
-<img src= 'https://github.com/heisenbrook/SIO_preparatory_task_CNN/blob/main/training_results/normal_run_15_epoch_attention/confusion_matrix_normalized.png' width="300" height="300" />   <img src= 'https://github.com/heisenbrook/SIO_preparatory_task_CNN/blob/main/training_results/tl_run_15_epoch_attention/confusion_matrix_normalized.png' width="300" 
+<img src= 'https://github.com/heisenbrook/SIO_preparatory_task_CNN/blob/main/training_results/normal_run_15_epoch_patience/confusion_matrix_normalized.png' width="300" height="300" />   <img src= 'https://github.com/heisenbrook/SIO_preparatory_task_CNN/blob/main/training_results/tl_run_15_epoch_patience/confusion_matrix_normalized.png' width="300" 
 height="300" />  
 
 Comparing the performance reveals that the model using transfer learning achieves higher accuracy (~87.5% vs. ~86.5%) and lower loss (~0.35 vs. ~0.36) compared to models trained from scratch. Transfer learning also enables faster learning, as demonstrated by the quicker decrease in training loss. Additionally, models utilizing transfer learning appear to generalize better, with more stable validation loss and higher accuracy.
