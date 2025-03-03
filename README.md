@@ -11,6 +11,7 @@ The evaluation will be conducted in two ways:
 2. **Training from Scratch**: Training the model without any pre-trained weights.
 
 The performance of both approaches will be compared using selected validation metrics to determine which method yields better results.
+The `main.py` file starts the training and registers all the used validation metrics for both models.
 
 A detailed description of each step, along with relevant results, will be provided.
 
@@ -77,26 +78,31 @@ The most useful metrics for the evaluation of classification tasks are:
 Accuracy = \frac{(TP + TN)}{(TP + TN + FP + FN)}
 ```
 Measures the percentage of correct predictions (True Positive *TP* + True Negative *TN*) out of the total (True Positive *TP* + True Negative *TN* + False Positive *FP* + False Negative *FN*).
+
 2. **Precision**:
 ```math
 Precision = \frac{TP}{(TP + FP)}
 ```
 Measures the percentage of correct positive predictions out of the total positive predictions.
+
 3. **Recall**:
 ```math
 Recall = \frac{TP}{(TP + FN)}
 ```
 Measures the percentage of actual positive instances correctly identified out of the total actual positive instances.
+
 4. **F1-Score**:
 ```math
 F1-Score = 2 * \frac{(Precision * Recall)}{(Precision + Recall)}
 ```
 It is the harmonic mean of precision and recall, useful when classes are imbalanced.
+
 5. **Specifity**:
 ```math
 Specifity = \frac{TN}{(TN + FP)}
 ```
 Measures the percentage of actual negative instances correctly identified out of the total actual negative instances.
+
 6. **Confusion Matrix**:
 All of the above metrics are derived from the confusion matrix, which evaluates the performance of a classification model by comparing the model's predictions with the actual values (ground truth). It is particularly useful for analyzing model errors and understanding how data is classified.
 
